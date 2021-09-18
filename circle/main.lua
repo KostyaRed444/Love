@@ -10,10 +10,10 @@ function love.load()
 		128/255,
 		128/255)
 
-	location = Vector:create(width/ 4, height/2)
+	location = Vector:create(width/ 2, height/2)
 	velocity = Vector:create(0,0)
 	mover = Mover:create(location, velocity)
-	wmover = Mover:create(location1, velocity)
+	--wmover = Mover:create(location1, velocity)
 	--wmover.size = 30
 
 	wind = Vector:create(0.01, 0)
@@ -25,24 +25,24 @@ function love.load()
 end
 
 function love.update()
-	--if isGravity then
-	--	mover:applyForce(gravity)
+	if isGravity then
+	mover:applyForce(gravity)
 	--	wmover:applyForce(gravity)
-	--end
-	--if isWind then
-	--	mover:applyForce(wind)
+	end
+	if isWind then
+		mover:applyForce(wind)
 	--	wmover:applyForce(wind)
-	--end
-	--if isFloating then
-	--	mover:applyForce(floating)
+	end
+	if isFloating then
+		mover:applyForce(floating)
 	--	wmover:applyForce(floating)
-	--end
+	end
 
 	--Другое
-	mover:applyForce(gravity)
-	wmover:applyForce(gravity)
+	--mover:applyForce(gravity)
+	
 	--mover:applyForce(wind)
-	--wmover:applyForce(wind)
+	
 	if mover.location.x < width/2 then
 		friction = (mover.velocity * -1):norm()
 		if friction then
@@ -55,14 +55,16 @@ function love.update()
 		friction = (mover.velocity):norm()
 		if friction then
 			friction:mul(0.005)
-			wmover:applyForce(friction)
+			mover:applyForce(friction)
 		end
-	end
+	end	
+		
+	
 
 	mover:update()
-	wmover:update()
+	--wmover:update()
 	mover:checkBoundaries()
-	wmover:checkBoundaries()
+	--wmover:checkBoundaries()
 end
 
 function love.draw()
@@ -71,15 +73,14 @@ function love.draw()
 	love.graphics.rectangle("fill", width/2, 0, width/2, height)
 	love.graphics.setColor(r,g,b,a)
 	mover:draw()
-	wmover:draw()
+	--wmover:draw()
 
 	love.graphics.print(tostring(mover.velocity),
 								mover.location.x + mover.size,
-								mover.location.y)
+								mover.location.y,
+								mover.friction)
 
-	love.graphics.print(tostring(wmover.velocity),
-								wmover.location.x + wmover.size,
-								wmover.location.y)
+
 
 	love.graphics.print("w: " .. tostring(isWind) ..
 						" g: " .. tostring(isGravity) ..
